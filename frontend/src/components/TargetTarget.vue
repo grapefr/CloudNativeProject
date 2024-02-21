@@ -50,6 +50,13 @@
                 <v-btn
                     color="primary"
                     text
+                    @click="save"
+                >
+                    Approve
+                </v-btn>
+                <v-btn
+                    color="primary"
+                    text
                     @click="remove"
                     v-if="!editMode"
                 >
@@ -67,14 +74,6 @@
         </v-card-actions>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn
-                v-if="!editMode"
-                color="primary"
-                text
-                @click="approve"
-            >
-                Approve
-            </v-btn>
         </v-card-actions>
 
         <v-snackbar
@@ -208,27 +207,6 @@
             },
             change(){
                 this.$emit('input', this.value);
-            },
-            async approve() {
-                try {
-                    if(!this.offline){
-                        var temp = await axios.post(axios.fixUrl(this.value._links[''].href))
-                        for(var k in temp.data) this.value[k]=temp.data[k];
-                    }
-
-                    this.editMode = false;
-                    
-                    this.$emit('input', this.value);
-                    this.$emit('delete', this.value);
-                
-                } catch(e) {
-                    this.snackbar.status = true
-                    if(e.response && e.response.data.message) {
-                        this.snackbar.text = e.response.data.message
-                    } else {
-                        this.snackbar.text = e
-                    }
-                }
             },
         },
     }

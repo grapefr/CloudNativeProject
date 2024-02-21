@@ -19,47 +19,5 @@ public class ModelController {
 
     @Autowired
     ModelRepository modelRepository;
-
-    @RequestMapping(
-        value = "models/{id}/request",
-        method = RequestMethod.PUT,
-        produces = "application/json;charset=UTF-8"
-    )
-    public Model request(
-        @PathVariable(value = "id") Long id,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws Exception {
-        System.out.println("##### /model/request  called #####");
-        Optional<Model> optionalModel = modelRepository.findById(id);
-
-        optionalModel.orElseThrow(() -> new Exception("No Entity Found"));
-        Model model = optionalModel.get();
-        model.request();
-
-        modelRepository.save(model);
-        return model;
-    }
-
-    @RequestMapping(
-        value = "models/{id}/requestcancel",
-        method = RequestMethod.PUT,
-        produces = "application/json;charset=UTF-8"
-    )
-    public Model cancel(
-        @PathVariable(value = "id") Long id,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws Exception {
-        System.out.println("##### /model/cancel  called #####");
-        Optional<Model> optionalModel = modelRepository.findById(id);
-
-        optionalModel.orElseThrow(() -> new Exception("No Entity Found"));
-        Model model = optionalModel.get();
-        model.cancel();
-
-        modelRepository.save(model);
-        return model;
-    }
 }
 //>>> Clean Arch / Inbound Adaptor

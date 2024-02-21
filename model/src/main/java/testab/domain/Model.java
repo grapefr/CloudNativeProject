@@ -49,27 +49,15 @@ public class Model {
     @PreUpdate
     public void onPreUpdate() {}
 
+    @PreRemove
+    public void onPreRemove() {}
+
     public static ModelRepository repository() {
         ModelRepository modelRepository = ModelApplication.applicationContext.getBean(
             ModelRepository.class
         );
         return modelRepository;
     }
-
-    //<<< Clean Arch / Port Method
-    public void request() {
-        //implement business logic here:
-
-    }
-
-    //>>> Clean Arch / Port Method
-    //<<< Clean Arch / Port Method
-    public void cancel() {
-        //implement business logic here:
-
-    }
-
-    //>>> Clean Arch / Port Method
 
     //<<< Clean Arch / Port Method
     public static void stateChange(ModelFailed modelFailed) {

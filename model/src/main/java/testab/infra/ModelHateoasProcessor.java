@@ -12,17 +12,6 @@ public class ModelHateoasProcessor
 
     @Override
     public EntityModel<Model> process(EntityModel<Model> model) {
-        model.add(
-            Link
-                .of(model.getRequiredLink("self").getHref() + "/request")
-                .withRel("request")
-        );
-        model.add(
-            Link
-                .of(model.getRequiredLink("self").getHref() + "/requestcancel")
-                .withRel("requestcancel")
-        );
-
         return model;
     }
 }

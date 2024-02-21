@@ -40,6 +40,9 @@ public class Target {
         requested.publishAfterCommit();
     }
 
+    @PrePersist
+    public void onPrePersist() {}
+
     @PreUpdate
     public void onPreUpdate() {}
 
@@ -49,14 +52,6 @@ public class Target {
         );
         return targetRepository;
     }
-
-    //<<< Clean Arch / Port Method
-    public void approve() {
-        //implement business logic here:
-
-    }
-
-    //>>> Clean Arch / Port Method
 
     //<<< Clean Arch / Port Method
     public static void stateChange(TargetCompleted targetCompleted) {

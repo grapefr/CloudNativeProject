@@ -12,10 +12,6 @@ public class TargetHateoasProcessor
 
     @Override
     public EntityModel<Target> process(EntityModel<Target> model) {
-        model.add(
-            Link.of(model.getRequiredLink("self").getHref() + "/").withRel("")
-        );
-
         return model;
     }
 }
