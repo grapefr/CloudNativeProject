@@ -4,6 +4,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javafx.application.Application;
+import testab.domain.Approved;
 import testab.domain.Core;
 import testab.domain.CoreRepository;
 
@@ -16,22 +17,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 public class Scheduler {
+  
   private static final Logger logger = LoggerFactory.getLogger(Application.class);
   private final CoreRepository coreRepository;
+  private final ModelClient modelClient;
 
   @Autowired
-  public Scheduler(CoreRepository coreRepository) {
+  public Scheduler(CoreRepository coreRepository, ModelClient modelClient) {
     this.coreRepository = coreRepository;
+    this.modelClient = modelClient;
   }
 
   // 5초마다 실행
   @Scheduled(fixedRate = 5000)
   public void performTask() {
     System.out.println("############ scheduler Regular task performed at " + System.currentTimeMillis());
-
-
-    // Use the injected CoreRepository instance
-    // ...
 
     // running 중인것을 확인하여 completed로 변경
     List<Core> optionalCore = coreRepository.findByState("running");
@@ -48,7 +48,17 @@ public class Scheduler {
         }
         if( core.getType().equals("model") ){
           System.out.println("Model Running");
-          core.setState("completed");
+
+          // 업데이트하기전 API 호출하여 취소되었는지 확인
+          Approved approved = modelClient.callOtherService(core.getId());
+          System.out.println("############ FEIGN:  " + approved);
+          if( approved.getState().equals("requestCanceled") ){
+            core.setState("requestCanceled");
+          }
+          else {
+            core.setState("completed");
+          }
+          
         }
         else if( core.getType().equals("target") ) {
           System.out.println("Target Running");

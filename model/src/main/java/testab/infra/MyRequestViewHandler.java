@@ -17,7 +17,10 @@ public class MyRequestViewHandler {
     @Autowired
     private MyRequestRepository myRequestRepository;
 
-    @StreamListener(KafkaProcessor.INPUT)
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['serviceType']=='model'"
+    )
     public void whenRequested_then_CREATE_1(@Payload Requested requested) {
         try {
             if (!requested.validate()) return;
@@ -26,14 +29,21 @@ public class MyRequestViewHandler {
             MyRequest myRequest = new MyRequest();
             // view 객체에 이벤트의 Value 를 set 함
             myRequest.setId(requested.getId());
+            myRequest.setState(requested.getState());
+            myRequest.setUserId(requested.getUserId());
+            myRequest.setModelName(requested.getModelName());
             // view 레파지 토리에 save
             myRequestRepository.save(myRequest);
+            System.out.println("############ CQRS 에 저장:  " + requested);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    @StreamListener(KafkaProcessor.INPUT)
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['serviceType']=='model'"
+    )
     public void whenModelCompleted_then_UPDATE_1(
         @Payload ModelCompleted modelCompleted
     ) {
@@ -56,7 +66,10 @@ public class MyRequestViewHandler {
         }
     }
 
-    @StreamListener(KafkaProcessor.INPUT)
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['serviceType']=='model'"
+    )
     public void whenModelFailed_then_UPDATE_2(
         @Payload ModelFailed modelFailed
     ) {
@@ -79,7 +92,10 @@ public class MyRequestViewHandler {
         }
     }
 
-    @StreamListener(KafkaProcessor.INPUT)
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['serviceType']=='model'"
+    )
     public void whenRejected_then_UPDATE_3(@Payload Rejected rejected) {
         try {
             if (!rejected.validate()) return;
@@ -100,7 +116,10 @@ public class MyRequestViewHandler {
         }
     }
 
-    @StreamListener(KafkaProcessor.INPUT)
+    @StreamListener(
+        value = KafkaProcessor.INPUT,
+        condition = "headers['serviceType']=='model'"
+    )
     public void whenRequestCanceled_then_UPDATE_4(
         @Payload RequestCanceled requestCanceled
     ) {

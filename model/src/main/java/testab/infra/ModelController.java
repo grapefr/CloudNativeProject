@@ -68,8 +68,19 @@ public class ModelController {
     public Model cancel(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id) throws Exception {
         System.out.println("##### /target/cancel  called ##### target cancel: " + id);
         Optional<Model> optionalModel = modelRepository.findById(id);
-        optionalModel.get().setState("cancelled");
+        optionalModel.get().setState("requestCanceled");
         modelRepository.save(optionalModel.get());
+        return optionalModel.get();
+    }
+
+
+    // 모델 정보 확인
+    @RequestMapping(value = "/models/{id}",
+            method = RequestMethod.GET,
+            produces = "application/json;charset=UTF-8")
+    public Model check(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id) throws Exception {
+        System.out.println("##### /target/get  called ##### target get: " + id);
+        Optional<Model> optionalModel = modelRepository.findById(id);
         return optionalModel.get();
     }
 }

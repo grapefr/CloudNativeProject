@@ -30,20 +30,44 @@ public class Model {
 
     @PostPersist
     public void onPostPersist() {
-        Approved approved = new Approved(this);
-        approved.publishAfterCommit();
+        // Approved approved = new Approved(this);
+        // approved.publishAfterCommit();
 
-        Rejected rejected = new Rejected(this);
-        rejected.publishAfterCommit();
+        // Rejected rejected = new Rejected(this);
+        // rejected.publishAfterCommit();
 
-        StateChanged stateChanged = new StateChanged(this);
-        stateChanged.publishAfterCommit();
+        // StateChanged stateChanged = new StateChanged(this);
+        // stateChanged.publishAfterCommit();
 
         Requested requested = new Requested(this);
         requested.publishAfterCommit();
 
-        RequestCanceled requestCanceled = new RequestCanceled(this);
-        requestCanceled.publishAfterCommit();
+        // RequestCanceled requestCanceled = new RequestCanceled(this);
+        // requestCanceled.publishAfterCommit();
+    }
+
+    @PostUpdate
+    public void onPostUpdate() {
+        if (this.state.equals("approved")) {
+            Approved approved = new Approved(this);
+            approved.publishAfterCommit();
+        }
+        else if (this.state.equals("rejected")) {
+            Rejected rejected = new Rejected(this);
+            rejected.publishAfterCommit();
+        }
+        else if (this.state.equals("stateChanged")) {
+            StateChanged stateChanged = new StateChanged(this);
+            stateChanged.publishAfterCommit();
+        }
+        else if (this.state.equals("requested")) {
+            Requested requested = new Requested(this);
+            requested.publishAfterCommit();
+        }
+        else if (this.state.equals("requestCanceled")) {
+            RequestCanceled requestCanceled = new RequestCanceled(this);
+            requestCanceled.publishAfterCommit();
+        }
     }
 
     @PreUpdate
