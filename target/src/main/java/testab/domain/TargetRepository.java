@@ -11,4 +11,5 @@ import testab.domain.*;
 //<<< PoEAA / Repository
 @RepositoryRestResource(collectionResourceRel = "targets", path = "targets")
 public interface TargetRepository
-    extends PagingAndSortingRepository<Target, Long> {}
+    extends PagingAndSortingRepository<Target, Long> {
+    }

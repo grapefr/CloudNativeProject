@@ -14,6 +14,7 @@ public class TargetCompleted extends AbstractEvent {
     private Long id;
     private String type;
     private String state;
+    private String requestId;
 
     public TargetCompleted(Core aggregate) {
         super(aggregate);

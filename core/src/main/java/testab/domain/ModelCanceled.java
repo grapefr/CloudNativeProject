@@ -14,6 +14,7 @@ public class ModelCanceled extends AbstractEvent {
     private Long id;
     private String type;
     private String state;
+    private String requestId;
 
     public ModelCanceled(Core aggregate) {
         super(aggregate);

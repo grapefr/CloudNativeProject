@@ -25,7 +25,7 @@ public class PolicyHandler {
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='Approved'"
+        condition = "headers['type']=='Approved' and headers['serviceType']=='model'"
     )
     public void wheneverApproved_StartModel(@Payload Approved approved) {
         Approved event = approved;
@@ -39,7 +39,7 @@ public class PolicyHandler {
 
     @StreamListener(
         value = KafkaProcessor.INPUT,
-        condition = "headers['type']=='Approved'"
+        condition = "headers['type']=='Approved' and headers['serviceType']=='target'"
     )
     public void wheneverApproved_StartTarget(@Payload Approved approved) {
         Approved event = approved;

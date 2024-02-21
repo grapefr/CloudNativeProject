@@ -17,6 +17,7 @@ public class AbstractEvent {
 
     String eventType;
     Long timestamp;
+    String svc = "target";
 
     public AbstractEvent(Object aggregate) {
         this();
@@ -45,6 +46,7 @@ public class AbstractEvent {
                     MimeTypeUtils.APPLICATION_JSON
                 )
                 .setHeader("type", getEventType())
+                .setHeader("serviceType", "target")
                 .build()
         );
     }

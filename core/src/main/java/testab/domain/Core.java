@@ -29,17 +29,37 @@ public class Core {
 
     @PostPersist
     public void onPostPersist() {
-        ModelCompleted modelCompleted = new ModelCompleted(this);
-        modelCompleted.publishAfterCommit();
+        // ModelCompleted modelCompleted = new ModelCompleted(this);
+        // modelCompleted.publishAfterCommit();
 
-        ModelFailed modelFailed = new ModelFailed(this);
-        modelFailed.publishAfterCommit();
+        // ModelFailed modelFailed = new ModelFailed(this);
+        // modelFailed.publishAfterCommit();
 
-        TargetCompleted targetCompleted = new TargetCompleted(this);
-        targetCompleted.publishAfterCommit();
+        // TargetCompleted targetCompleted = new TargetCompleted(this);
+        // targetCompleted.publishAfterCommit();
 
-        ModelCanceled modelCanceled = new ModelCanceled(this);
-        modelCanceled.publishAfterCommit();
+        // ModelCanceled modelCanceled = new ModelCanceled(this);
+        // modelCanceled.publishAfterCommit();
+    }
+
+    @PostUpdate
+    public void onPostUpdate(){
+        if (this.state.equals("completed")) {
+            ModelCompleted modelCompleted = new ModelCompleted(this);
+            modelCompleted.publishAfterCommit();
+        }
+        else if (this.state.equals("failed")) {
+            ModelFailed modelFailed = new ModelFailed(this);
+            modelFailed.publishAfterCommit();
+        }
+        else if (this.state.equals("canceled")) {
+            ModelCanceled modelCanceled = new ModelCanceled(this);
+            modelCanceled.publishAfterCommit();
+        }
+        else if (this.state.equals("targetCompleted")) {
+            TargetCompleted targetCompleted = new TargetCompleted(this);
+            targetCompleted.publishAfterCommit();
+        }
     }
 
     public static CoreRepository repository() {
@@ -69,6 +89,14 @@ public class Core {
 
          });
         */
+        Core core = new Core();
+        core.setRequestId(approved.getId().toString());
+        core.setType("model");
+        core.setState("running");
+        repository().save(core);
+        System.out.println(
+            "\n\n##### model core save : " + core + "\n\n"
+        );
 
     }
 
@@ -94,6 +122,14 @@ public class Core {
          });
         */
 
+        Core core = new Core();
+        core.setRequestId(approved.getId().toString());
+        core.setType("target");
+        core.setState("running");
+        repository().save(core);
+        System.out.println(
+            "\n\n##### target core save : " + core + "\n\n"
+        );
     }
 
     //>>> Clean Arch / Port Method

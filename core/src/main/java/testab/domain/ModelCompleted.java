@@ -14,6 +14,7 @@ public class ModelCompleted extends AbstractEvent {
     private Long id;
     private String type;
     private String state;
+    private String requestId;
 
     public ModelCompleted(Core aggregate) {
         super(aggregate);

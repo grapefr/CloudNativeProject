@@ -6,9 +6,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import javafx.application.Application;
 import testab.domain.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //<<< Clean Arch / Inbound Adaptor
 
@@ -17,49 +20,57 @@ import testab.domain.*;
 @Transactional
 public class ModelController {
 
+    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+
     @Autowired
     ModelRepository modelRepository;
 
-    @RequestMapping(
-        value = "models/{id}/request",
-        method = RequestMethod.PUT,
-        produces = "application/json;charset=UTF-8"
-    )
-    public Model request(
-        @PathVariable(value = "id") Long id,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws Exception {
-        System.out.println("##### /model/request  called #####");
-        Optional<Model> optionalModel = modelRepository.findById(id);
-
-        optionalModel.orElseThrow(() -> new Exception("No Entity Found"));
-        Model model = optionalModel.get();
-        model.request();
-
-        modelRepository.save(model);
-        return model;
+    @RequestMapping(value = "/models",
+            method = RequestMethod.POST,
+            produces = "application/json;charset=UTF-8")
+    public Model reqeust(HttpServletRequest request, HttpServletResponse response, @RequestBody Model model
+        ) throws Exception {
+            System.out.println("##### /target/approve  called ##### target : " + model.getUserId() );
+            logger.info("##### /target/approve  called ##### target : {} " , model);
+            model.setState("requested");
+            // modelRepository.save(model);
+            return modelRepository.save(model);
     }
 
-    @RequestMapping(
-        value = "models/{id}/requestcancel",
-        method = RequestMethod.PUT,
-        produces = "application/json;charset=UTF-8"
-    )
-    public Model cancel(
-        @PathVariable(value = "id") Long id,
-        HttpServletRequest request,
-        HttpServletResponse response
-    ) throws Exception {
-        System.out.println("##### /model/cancel  called #####");
+    @RequestMapping(value = "/models",
+            method = RequestMethod.PUT,
+            produces = "application/json;charset=UTF-8")
+    public Model approve(HttpServletRequest request, HttpServletResponse response, @RequestBody Approved approved
+        ) throws Exception {
+            System.out.println("##### /target/approve  called ##### target approve :  " + approved.getState()  );
+            Optional<Model> optionalModel = modelRepository.findById(approved.getId());
+            optionalModel.get().setState("approved");
+            modelRepository.save(optionalModel.get());
+            return optionalModel.get();
+    }
+
+    @RequestMapping(value = "/models/{id}",
+            method = RequestMethod.PATCH,
+            produces = "application/json;charset=UTF-8")
+    public Model reject(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id
+        ) throws Exception {
+            System.out.println("##### /target/approve  called ##### target reject: " + id);
+            Optional<Model> optionalModel = modelRepository.findById(id);
+            optionalModel.get().setState("rejected");
+            modelRepository.save(optionalModel.get());
+            return optionalModel.get();
+    }
+
+    // 모델 취소 API 작성
+    @RequestMapping(value = "/models/{id}",
+            method = RequestMethod.DELETE,
+            produces = "application/json;charset=UTF-8")
+    public Model cancel(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id) throws Exception {
+        System.out.println("##### /target/cancel  called ##### target cancel: " + id);
         Optional<Model> optionalModel = modelRepository.findById(id);
-
-        optionalModel.orElseThrow(() -> new Exception("No Entity Found"));
-        Model model = optionalModel.get();
-        model.cancel();
-
-        modelRepository.save(model);
-        return model;
+        optionalModel.get().setState("cancelled");
+        modelRepository.save(optionalModel.get());
+        return optionalModel.get();
     }
 }
 //>>> Clean Arch / Inbound Adaptor

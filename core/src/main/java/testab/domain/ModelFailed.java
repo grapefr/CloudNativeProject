@@ -14,6 +14,7 @@ public class ModelFailed extends AbstractEvent {
     private Long id;
     private String type;
     private String state;
+    private String requestId;
 
     public ModelFailed(Core aggregate) {
         super(aggregate);

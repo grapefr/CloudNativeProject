@@ -30,14 +30,26 @@ public class Target {
 
     @PostPersist
     public void onPostPersist() {
-        Approved approved = new Approved(this);
-        approved.publishAfterCommit();
-
-        Rejected rejected = new Rejected(this);
-        rejected.publishAfterCommit();
+        // Approved approved = new Approved(this);
+        // approved.publishAfterCommit();
+        // Rejected rejected = new Rejected(this);
+        // rejected.publishAfterCommit();
 
         Requested requested = new Requested(this);
         requested.publishAfterCommit();
+        
+    }
+
+    @PostUpdate
+    public void onPostUpdate() {
+        if (this.state.equals("approved")) {
+            Approved approved = new Approved(this);
+            approved.publishAfterCommit();
+        }
+        else if (this.state.equals("rejected")) {
+            Rejected rejected = new Rejected(this);
+            rejected.publishAfterCommit();
+        }
     }
 
     @PreUpdate
@@ -55,7 +67,23 @@ public class Target {
         //implement business logic here:
 
     }
+    public Target approve(Target target) {
+        //implement business logic here:
+        target.setState("approved");
+        return target;
+    }
 
+    public Target reject(Target target) {
+        //implement business logic here:
+        target.setState("rejected");
+        return target;
+    }
+
+    public Target request(Target target) {
+        //implement business logic here:
+        target.setState("requested");
+        return target;
+    }
     //>>> Clean Arch / Port Method
 
     //<<< Clean Arch / Port Method
