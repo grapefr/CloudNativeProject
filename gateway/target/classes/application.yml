@@ -1,0 +1,84 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+#<<< API Gateway / Routes
+      routes:
+        - id: model
+          uri: http://localhost:8082
+          predicates:
+            - Path=/models/**, 
+        - id: notice
+          uri: http://localhost:8083
+          predicates:
+            - Path=/notices/**, 
+        - id: core
+          uri: http://localhost:8084
+          predicates:
+            - Path=/cores/**, 
+        - id: target
+          uri: http://localhost:8085
+          predicates:
+            - Path=/targets/**, 
+        - id: frontend
+          uri: http://localhost:8080
+          predicates:
+            - Path=/**
+#>>> API Gateway / Routes
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: model
+          uri: http://model:8080
+          predicates:
+            - Path=/models/**, 
+        - id: notice
+          uri: http://notice:8080
+          predicates:
+            - Path=/notices/**, 
+        - id: core
+          uri: http://core:8080
+          predicates:
+            - Path=/cores/**, 
+        - id: target
+          uri: http://target:8080
+          predicates:
+            - Path=/targets/**, 
+        - id: frontend
+          uri: http://frontend:8080
+          predicates:
+            - Path=/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
