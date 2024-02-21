@@ -20,20 +20,34 @@ public class TargetController {
     @Autowired
     TargetRepository targetRepository;
 
-
-
-
-
-
-    @RequestMapping(value = "targets/",
+    @RequestMapping(value = "/targets",
             method = RequestMethod.POST,
             produces = "application/json;charset=UTF-8")
-    public Target approve(HttpServletRequest request, HttpServletResponse response, 
+    public Target reqeust(HttpServletRequest request, HttpServletResponse response, @RequestBody Target target
         ) throws Exception {
-            System.out.println("##### /target/approve  called #####");
-            target.approve();
+            System.out.println("##### /target/approve  called ##### target : " + target.getUserId() );
             targetRepository.save(target);
             return target;
+    }
+
+    @RequestMapping(value = "/targets",
+            method = RequestMethod.PUT,
+            produces = "application/json;charset=UTF-8")
+    public void approve(HttpServletRequest request, HttpServletResponse response, @RequestBody Approved approved
+        ) throws Exception {
+            System.out.println("##### /target/approve  called ##### target approve :  " + approved.getState()  );
+            // targetRepository.save(approved);
+            // return targetRepository.findById(approved.getId());;
+    }
+
+    @RequestMapping(value = "/targets/{id}",
+            method = RequestMethod.PATCH,
+            produces = "application/json;charset=UTF-8")
+    public void reject(HttpServletRequest request, HttpServletResponse response, @PathVariable("id") Long id
+        ) throws Exception {
+            System.out.println("##### /target/approve  called ##### target reject: " + id);
+            // targetRepository.save(target);
+            // return targetRepository.findById(id);
     }
 
 }
